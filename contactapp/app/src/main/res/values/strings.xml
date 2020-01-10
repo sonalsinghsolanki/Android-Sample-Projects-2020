@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ContactApp</string>
+    <string name="tab_text_1">Contact Lists</string>
+    <string name="tab_text_2">Message Lists</string>
+</resources>
