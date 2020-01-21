@@ -2,4 +2,15 @@
     <string name="app_name">ContactApp</string>
     <string name="tab_text_1">Contact Lists</string>
     <string name="tab_text_2">Message Lists</string>
+    <string name="lbl_contact_name">Contact Name</string>
+    <string name="lbl_phone_no">Contact Name</string>
+    <string name="txt_contact_name">No Name</string>
+    <string name="txt_phone_no">123456</string>
+    <string name="txt_sms_time">11:30</string>
+    <string name="txt_otp">334455</string>
+    <string name="bt_send_message">Send Message</string>
+    <string name="title_activity_contact_details">ContactDetailsActivity</string>
+    <string name="title_activity_send_message">SendMessageActivity</string>
+    <string name="hint_message_details">Your message here..</string>
+    <string name="bt_send_otp">Send</string>
 </resources>

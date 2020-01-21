@@ -13,9 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.contactapp.R;
+import com.example.contactapp.ui.main.data.ContactLists;
 import com.example.contactapp.ui.main.dummy.DummyContent;
 import com.example.contactapp.ui.main.dummy.DummyContent.DummyItem;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +39,7 @@ public class ContactListsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private  MyContactListsRecyclerViewAdapter myContactListsRecyclerViewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -72,11 +81,40 @@ public class ContactListsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyContactListsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            //recyclerView.setAdapter(new MyContactListsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            List<ContactLists> tempContactLists = new ArrayList<>();
+            try {
+                tempContactLists = writeJsonIntoAdapter();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            recyclerView.setAdapter(new MyContactListsRecyclerViewAdapter(tempContactLists, mListener));
+
+
         }
         return view;
     }
 
+    private List<ContactLists> writeJsonIntoAdapter() throws JSONException {
+
+
+        List<ContactLists> contactLists = new ArrayList<>();
+
+        JSONObject getJsonFromfile = new JSONObject(loadJSONFromAsset());
+        JSONArray contactListArray = getJsonFromfile.getJSONArray("contactlists");
+        final int numberOfItemsInResp = contactListArray.length();
+        for (int i = 0; i < numberOfItemsInResp; i++) {
+            JSONObject allContacts = contactListArray.getJSONObject(i);
+            ContactLists tempContact = new ContactLists();
+            tempContact.setmFirstName(allContacts.getString("firstname"));
+            tempContact.setmLastName(allContacts.getString("lastname"));
+            tempContact.setmPhoneNumber(allContacts.getString("phoneno"));
+            contactLists.add(tempContact);
+        }
+        return contactLists;
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -84,8 +122,8 @@ public class ContactListsFragment extends Fragment {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+           /* throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");*/
         }
     }
 
@@ -107,6 +145,33 @@ public class ContactListsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+       // void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(ContactLists contactLists);
+    }
+
+    private String loadJSONFromAsset() {
+        String json = null;
+        try {
+
+            InputStream is = getActivity().getApplicationContext().getAssets().open("contactslists.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
+
     }
 }

@@ -2,13 +2,18 @@ package com.example.contactapp.ui.main;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.contactapp.ContactDetailsActivity;
 import com.example.contactapp.R;
 import com.example.contactapp.ui.main.ContactListsFragment.OnListFragmentInteractionListener;
+import com.example.contactapp.ui.main.data.ContactLists;
 import com.example.contactapp.ui.main.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -20,11 +25,13 @@ import java.util.List;
  */
 public class MyContactListsRecyclerViewAdapter extends RecyclerView.Adapter<MyContactListsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+   // private final List<DummyItem> mValues;
+   private final List<ContactLists> mContactLists;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyContactListsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    //public MyContactListsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener)
+    public MyContactListsRecyclerViewAdapter(List<ContactLists> contactLists, OnListFragmentInteractionListener listener) {
+        mContactLists = contactLists;
         mListener = listener;
     }
 
@@ -37,9 +44,12 @@ public class MyContactListsRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = mContactLists.get(position);
+       // holder.mIdView.setText(mContactLists.get(position).id);
+        final String fullName  = mContactLists.get(position).getmFirstName()+" "+mContactLists.get(position).getmLastName();
+        holder.mTxtContactNameValue.setText(fullName);
+       // holder.mTxtContactNameValue.setText(mContactLists.get(position).getmFirstName());
+        final String phoneNo = mContactLists.get(position).getmPhoneNumber();
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,32 +58,44 @@ public class MyContactListsRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
+                    //Log.v("MyContactListAdapter","List clicked");
+
                 }
+            }
+        });
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 Intent i = new Intent(view.getContext(), ContactDetailsActivity.class);
+                     i.putExtra("FULL_NAME", fullName);
+                     i.putExtra("PHONE_NO", phoneNo);
+                    view.getContext().startActivity(i);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mContactLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+      //  public final TextView mLblContactName;
+        public final TextView mTxtContactNameValue;
+       // public DummyItem mItem;
+       public ContactLists mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTxtContactNameValue = (TextView) view.findViewById(R.id.txt_contact_name);
+           // mContentView = (TextView) view.findViewById(R.id.content);
         }
 
-        @Override
+       /* @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
+            return super.toString() + " '" + mTxtContactNameValue.getText() + "'";
+        }*/
     }
 }

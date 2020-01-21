@@ -38,8 +38,9 @@ public class MySentMessageListsRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mTxtContactName.setText(mValues.get(position).id);
+        holder.mSentOTP.setText(mValues.get(position).content);
+        holder.mSmsTime.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,20 +61,21 @@ public class MySentMessageListsRecyclerViewAdapter extends RecyclerView.Adapter<
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mTxtContactName,mSmsTime,mSentOTP;
+       // public final TextView mContentView;
         public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTxtContactName = (TextView) view.findViewById(R.id.txt_contact_name);
+            mSmsTime = (TextView) view.findViewById(R.id.txt_sms_time);
+            mSentOTP = (TextView) view.findViewById(R.id.txt_otp);
         }
 
-        @Override
+       /* @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
+          //  return super.toString() + " '" + mContentView.getText() + "'";
+        }*/
     }
 }
