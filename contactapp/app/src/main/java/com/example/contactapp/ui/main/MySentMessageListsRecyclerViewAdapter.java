@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.contactapp.R;
 import com.example.contactapp.ui.main.SentMessageListsFragment.OnListFragmentInteractionListener;
+import com.example.contactapp.ui.main.data.SentMessageLists;
 import com.example.contactapp.ui.main.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -20,10 +21,10 @@ import java.util.List;
  */
 public class MySentMessageListsRecyclerViewAdapter extends RecyclerView.Adapter<MySentMessageListsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<SentMessageLists> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MySentMessageListsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MySentMessageListsRecyclerViewAdapter(List<SentMessageLists> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -38,9 +39,9 @@ public class MySentMessageListsRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mTxtContactName.setText(mValues.get(position).id);
-        holder.mSentOTP.setText(mValues.get(position).content);
-        holder.mSmsTime.setText(mValues.get(position).content);
+        holder.mTxtContactName.setText(mValues.get(position).getContactFullName());
+        holder.mSentOTP.setText(mValues.get(position).getSentOtp());
+        holder.mSmsTime.setText(mValues.get(position).getOtpTime());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +64,7 @@ public class MySentMessageListsRecyclerViewAdapter extends RecyclerView.Adapter<
         public final View mView;
         public final TextView mTxtContactName,mSmsTime,mSentOTP;
        // public final TextView mContentView;
-        public DummyItem mItem;
+        public SentMessageLists mItem;
 
         public ViewHolder(View view) {
             super(view);

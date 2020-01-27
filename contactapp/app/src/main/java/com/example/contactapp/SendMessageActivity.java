@@ -3,11 +3,14 @@ package com.example.contactapp;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -62,10 +65,20 @@ public class SendMessageActivity extends AppCompatActivity {
                 HashMap<String,String> userData = new HashMap<>();
                 userData.put("contactName",getIntent().getStringExtra("FULL_NAME"));
                 userData.put("otp",otpStr);
-                mDatabaseRef.push().setValue(userData);
+                mDatabaseRef.push().setValue(userData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SendMessageActivity.this, "Otp Sent successfull!", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(SendMessageActivity.this,"Some error occured,please try again!",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
                //To Navigate to first activity of the app ,add this code and in manifest file as well
-                Toast.makeText(SendMessageActivity.this,"Otp Sent successfull!",Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent( getApplicationContext(), MainActivity.class );
                 intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
                 startActivity( intent );
