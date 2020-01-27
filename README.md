@@ -1,2 +1,3 @@
 # android-projects20
  New projects assigments for 2020
+ContactApp:This app is implemented as a contact list app,wherein a users are listed in contact list app ,users are stored in array list,on click on a user name,sent otp page is opened with randomly generated otp using random function in java,onclick on sentotp button,a entry is firebase realtime database is made to store sent otps list.On Messagelist,user can see lists of otp sent to various users fetched from DB.This app can be modified to get users lists from DB,send realtime otp to users using thrid party apis and more user friendly UI.
