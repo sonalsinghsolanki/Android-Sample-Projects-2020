@@ -5,6 +5,7 @@
     <string name="lbl_contact_name">Contact Name</string>
     <string name="lbl_phone_no">Contact Name</string>
     <string name="txt_contact_name">No Name</string>
+    <string name="txt_email">example@sos.com</string>
     <string name="txt_phone_no">123456</string>
     <string name="txt_sms_time">11:30</string>
     <string name="txt_otp">334455</string>
@@ -13,4 +14,12 @@
     <string name="title_activity_send_message">SendMessageActivity</string>
     <string name="hint_message_details">Your message here..</string>
     <string name="bt_send_otp">Send</string>
+    <string name="title_activity_add_contacts">AddContacts</string>
+    <string name="lbl_add_full_name">Full Name</string>
+    <string name="lbl_add_phone_no">Phone No</string>
+    <string name="lbl_add_email">Email Id</string>
+    <string name="hint_add_full_name">Enter Full Name</string>
+    <string name="hint_add_phone_no">Enter Phone No</string>
+    <string name="hint_add_email">Enter Email</string>
+    <string name="bt_add_contact">Save</string>
 </resources>

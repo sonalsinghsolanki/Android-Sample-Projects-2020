@@ -110,6 +110,8 @@ public class ContactListsFragment extends Fragment {
             tempContact.setmFirstName(allContacts.getString("firstname"));
             tempContact.setmLastName(allContacts.getString("lastname"));
             tempContact.setmPhoneNumber(allContacts.getString("phoneno"));
+            tempContact.setmEmail(allContacts.getString("email"));
+
             contactLists.add(tempContact);
         }
         return contactLists;

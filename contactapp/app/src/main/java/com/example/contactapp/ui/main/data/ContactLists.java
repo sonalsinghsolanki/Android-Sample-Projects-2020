@@ -5,14 +5,19 @@ public class ContactLists {
     private String mLastName;
     private String mPhoneNumber;
 
+
+
+    private String mEmail;
+
     public ContactLists(){
 
     }
 
-    public ContactLists(String mFirstName, String mLastName, String mPhoneNumber) {
+    public ContactLists(String mFirstName, String mLastName, String mPhoneNumber,String mEmail) {
         this.mFirstName = mFirstName;
         this.mLastName = mLastName;
         this.mPhoneNumber = mPhoneNumber;
+        this.mEmail = mEmail;
     }
 
     public String getmFirstName() {
@@ -38,10 +43,13 @@ public class ContactLists {
     public void setmPhoneNumber(String mPhoneNumber) {
         this.mPhoneNumber = mPhoneNumber;
     }
+    public String getmEmail() {
+        return mEmail;
+    }
 
-
-
-
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
 
 
 }

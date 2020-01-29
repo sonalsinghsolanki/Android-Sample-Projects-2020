@@ -50,6 +50,8 @@ public class MyContactListsRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
         holder.mTxtContactNameValue.setText(fullName);
        // holder.mTxtContactNameValue.setText(mContactLists.get(position).getmFirstName());
         final String phoneNo = mContactLists.get(position).getmPhoneNumber();
+        final String email = mContactLists.get(position).getmEmail();
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
