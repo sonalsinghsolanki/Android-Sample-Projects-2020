@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddBlog"
+    android:layout_margin="10dp">
+
+
+    <ImageButton
+        android:id="@+id/img_blog_image"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:padding="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:srcCompat="@color/common_google_signin_btn_text_dark_default"
+        tools:srcCompat="@drawable/ic_add_white_24dp" />
+
+    <EditText
+        android:id="@+id/edt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_blog_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/input_outline"
+        android:ems="10"
+        android:hint="Post Title"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:singleLine="true" />
+    <EditText
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/edt_description"
+        android:background="@drawable/input_outline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_title"
+        android:hint="Post Description.."
+        android:padding="10dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:lines="4"
+        android:minLines="4"
+        android:maxLines="4"
+        android:gravity="top"/>
+
+    <ProgressBar
+        android:layout_below="@id/edt_description"
+        android:id="@+id/progress_horizontal_add_blog"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+    <Button
+        android:id="@+id/bt_post"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/progress_horizontal_add_blog"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorPrimary"
+        android:text="Submit Post"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>
