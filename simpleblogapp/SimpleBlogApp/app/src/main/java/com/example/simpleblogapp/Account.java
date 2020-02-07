@@ -31,6 +31,7 @@ public class Account extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private RecyclerView recyclerViewBlogList;
     private FirebaseRecyclerAdapter adapter;
+    private DatabaseReference mDatabaseRef;
 
 
     @Override
@@ -39,7 +40,10 @@ public class Account extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         mAuth = FirebaseAuth.getInstance();
-
+        mDatabaseRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Blog");
+        mDatabaseRef.keepSynced(true);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -53,6 +57,7 @@ public class Account extends AppCompatActivity {
        // recyclerViewBlogList.setHasFixedSize(true);
         recyclerViewBlogList.setLayoutManager(new LinearLayoutManager(this));
         fetch();
+       // adapter.notifyDataSetChanged();
 
 
     }
@@ -143,9 +148,14 @@ public class Account extends AppCompatActivity {
     }
     private void fetch() {
 
-        Query query = FirebaseDatabase.getInstance()
+        //This will get all blogs of all users
+        /*Query query = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Blog");
+                .child("Blog");*/
+        String currentUser = mAuth.getCurrentUser().getUid();
+        //Users specific blogs
+       Query query = mDatabaseRef.orderByChild("userid").equalTo(currentUser);
+
         FirebaseRecyclerOptions<Blog> options =
                 new FirebaseRecyclerOptions.Builder<Blog>()
                         .setQuery(query, new SnapshotParser<Blog>() {
