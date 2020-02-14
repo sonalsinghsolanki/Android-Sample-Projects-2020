@@ -2,6 +2,7 @@ package com.example.simpleblogapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,11 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Register extends AppCompatActivity {
-    private EditText mEdtFullName,mEdtEmail,mEdtPassword,mEdtPhoneNo;
+    private EditText mEdtFullName,mEdtEmail,mEdtPassword,mEdtPhoneNo,mEdtConfirmPassword;
     private Button bt_register;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabaseRef;
+    private Toolbar toolbarRegister;
 
     private ProgressBar mProgressBar;
 
@@ -33,6 +35,12 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        toolbarRegister = findViewById(R.id.toolbar_register);
+        setSupportActionBar(toolbarRegister);
+        getSupportActionBar().setTitle("Register User");
+
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -62,6 +70,7 @@ public class Register extends AppCompatActivity {
         mEdtEmail = findViewById(R.id.edt_email);
         mEdtPassword = findViewById(R.id.edt_password);
         mEdtPhoneNo = findViewById(R.id.edt_phone_no);
+        mEdtConfirmPassword = findViewById(R.id.edt_confirm_password);
         bt_register = findViewById(R.id.bt_register);
 
         //if logged in then new user creation process will start..
@@ -80,41 +89,48 @@ public class Register extends AppCompatActivity {
         final String name = mEdtFullName.getText().toString().trim();
         final String email = mEdtEmail.getText().toString().trim();
         String password = mEdtPassword.getText().toString().trim();
+        String confirmPassword = mEdtConfirmPassword.getText().toString().trim();
         String phoneno = mEdtPhoneNo.getText().toString().trim();
 
         //check if all fields values are not empty
-        if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) &&
-                !TextUtils.isEmpty(password) && !TextUtils.isEmpty(phoneno)){
+        if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(confirmPassword) &&
+                !TextUtils.isEmpty(password) && !TextUtils.isEmpty(phoneno))
+        {
+            if(password.equals(confirmPassword))
+            {
 
-            mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
 
-        //User creation process starts ..
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
+                //User creation process starts ..
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if(task.isSuccessful()){
-                    String user_id = mAuth.getCurrentUser().getUid();
-                    DatabaseReference current_user = mDatabaseRef.child(user_id);
-                    current_user.child("name").setValue(name);
-                    current_user.child("image").setValue("default");
+                        if (task.isSuccessful()) {
+                            String user_id = mAuth.getCurrentUser().getUid();
+                            DatabaseReference current_user = mDatabaseRef.child(user_id);
+                            current_user.child("name").setValue(name);
+                            current_user.child("image").setValue("default");
 
-                    mProgressBar.setVisibility(View.INVISIBLE);
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            finishAffinity();
+                            Intent i = new Intent(Register.this, Account.class);
 
-                        Intent i = new Intent(Register.this,Account.class);
-
-                        startActivity(i);
+                            startActivity(i);
 
 
-                   }else {
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                            Toast.makeText(Register.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                Toast.makeText(Register.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();
+                            }
+                            // Toast.makeText(Register.this,"User already Exist",Toast.LENGTH_SHORT).show();
                         }
-                       // Toast.makeText(Register.this,"User already Exist",Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
+                });
+            }else{
+                Toast.makeText(Register.this, "Mismatch Password and Confirm Password,please try again!", Toast.LENGTH_SHORT).show();
+            }
         }
         else{
             Toast.makeText(Register.this,

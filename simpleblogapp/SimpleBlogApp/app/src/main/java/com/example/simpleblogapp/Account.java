@@ -2,6 +2,7 @@ package com.example.simpleblogapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,12 +33,17 @@ public class Account extends AppCompatActivity {
     private RecyclerView recyclerViewBlogList;
     private FirebaseRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef;
+    private Toolbar toolbarBlogLists;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
+        toolbarBlogLists = findViewById(R.id.toolbar_blog_lists);
+        setSupportActionBar(toolbarBlogLists);
+        getSupportActionBar().setTitle("Blog Lists");
 
         mAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance()
@@ -68,6 +74,8 @@ public class Account extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem addBlogItem = menu.findItem(R.id.action_add_blog);
+        addBlogItem.setVisible(true);
         return true;
     }
 
@@ -78,15 +86,19 @@ public class Account extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_search) {
             return true;
         }
         if(id == R.id.action_logout){
             logout();
         }
 
-        if(id == R.id.action_add){
+        if(id == R.id.action_add_blog){
             addBlog();
         }
         return super.onOptionsItemSelected(item);
@@ -99,6 +111,7 @@ public class Account extends AppCompatActivity {
 
     private void logout() {
         mAuth.signOut();
+        finishAffinity();
         Intent i = new Intent(Account.this,Login.class);
         //If set, this activity will become the start of a new task on this history stack.
        // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

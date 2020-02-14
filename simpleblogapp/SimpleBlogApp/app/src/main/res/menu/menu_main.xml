@@ -3,18 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.simpleblogapp.Login">
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_search"
+        android:title="@string/action_search"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_blog"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/add_blog"
+        app:showAsAction="always"
+        android:visible="false"/>
+    <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"
-        android:orderInCategory="100"
-        android:title="Logout"
+        android:orderInCategory="101"
+        android:title="@string/app_logout"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_add"
-        android:title="Add Blog"
-        android:icon="@drawable/ic_add_white_24dp"
-        app:showAsAction="always" />
 </menu>

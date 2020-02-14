@@ -9,6 +9,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -83,6 +84,11 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //mAuth.addAuthStateListener(mAuthListener);
+        //If current user is logged in then take the user to Account page
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+           sendToAccountActivity();
+        }
     }
 
     private void startLoginIn(){
@@ -111,20 +117,7 @@ public class Login extends AppCompatActivity {
 
                    }else{
                        mProgressBar.setVisibility(View.INVISIBLE);
-                        Intent i = new Intent(Login.this,Account.class);
-                        //If set, this activity will become the start of a new task on this history stack.
-                        // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                        //If set in an Intent passed to Context#startActivity, this flag will cause any
-                        // existing task that would be associated with the activity to be cleared before the activity is started.
-                        // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                   /*If set, and the activity being launched is already running in the current task,
-                   then instead of launching a new instance of that activity, all of the other activities
-                   on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent.
-                   * */
-                        // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
+                       sendToAccountActivity();
                    }
                 }
             });
@@ -140,6 +133,8 @@ public class Login extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -154,4 +149,21 @@ public class Login extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }*/
+   private void sendToAccountActivity(){
+       Intent i = new Intent(Login.this,Account.class);
+       //If set, this activity will become the start of a new task on this history stack.
+       // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+       //If set in an Intent passed to Context#startActivity, this flag will cause any
+       // existing task that would be associated with the activity to be cleared before the activity is started.
+       // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                   /*If set, and the activity being launched is already running in the current task,
+                   then instead of launching a new instance of that activity, all of the other activities
+                   on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent.
+                   * */
+       // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       startActivity(i);
+       finish();
+   }
 }

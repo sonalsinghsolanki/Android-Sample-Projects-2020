@@ -5,10 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddBlog"
-    android:layout_margin="10dp">
+    >
+    <androidx.appcompat.widget.Toolbar
+        android:background="@color/colorPrimary"
+        android:id="@+id/toolbar_add_blog"
+        app:titleTextColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
     <ImageButton
+        android:layout_below="@+id/toolbar_add_blog"
         android:id="@+id/img_blog_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"

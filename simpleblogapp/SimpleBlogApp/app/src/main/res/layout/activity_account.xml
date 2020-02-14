@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Account"
-    android:layout_margin="10dp">
+    >
+    <androidx.appcompat.widget.Toolbar
+        android:background="@color/colorPrimary"
+        android:id="@+id/toolbar_blog_lists"
+        app:titleTextColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <!--<ProgressBar
         android:id="@+id/progress_circular"
         android:layout_width="150dp"
@@ -19,7 +25,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:progressDrawable="@drawable/circle"/>-->
     <androidx.recyclerview.widget.RecyclerView
-
+        android:layout_margin="10dp"
+        android:layout_below="@+id/toolbar_blog_lists"
         android:id="@+id/recyclerview_blog_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

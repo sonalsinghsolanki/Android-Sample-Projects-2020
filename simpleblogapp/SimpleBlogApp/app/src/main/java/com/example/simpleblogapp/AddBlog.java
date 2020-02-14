@@ -3,12 +3,15 @@ package com.example.simpleblogapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,11 +42,17 @@ public class AddBlog extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private Toolbar toolbarAddBlogs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_blog);
+
+        toolbarAddBlogs = findViewById(R.id.toolbar_add_blog);
+        setSupportActionBar(toolbarAddBlogs);
+        getSupportActionBar().setTitle("Add Blogs");
+
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Blog");
         mDatabaseRef.keepSynced(true);
@@ -124,6 +133,7 @@ public class AddBlog extends AppCompatActivity {
                     });
 
                     mProgressBar.setVisibility(View.INVISIBLE);
+                    finishAffinity();
                     startActivity(new Intent(AddBlog.this,Account.class));
 
                 }
@@ -148,5 +158,44 @@ public class AddBlog extends AppCompatActivity {
             //imgBlogImage.setImageURI(imageUri);
             Picasso.get().load(mImgUri).into(imgBlogImage);
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_search) {
+            return true;
+        }
+        if(id == R.id.action_logout){
+            logout();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        mAuth.signOut();
+       // finishAffinity();
+        Intent i = new Intent(AddBlog.this,Login.class);
+        startActivity(i);
+        finish();
+
     }
 }

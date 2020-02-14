@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddBlog"></activity>
+        <activity android:name=".AccountSetup"></activity>
+        <!--
+        if we want to fix screen orientation of the app just add that tag
+        in each activity of the app
+        -->
+        <activity android:name=".AddBlog" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
