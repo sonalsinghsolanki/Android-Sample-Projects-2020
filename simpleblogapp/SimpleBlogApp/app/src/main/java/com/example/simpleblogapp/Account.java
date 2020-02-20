@@ -89,7 +89,7 @@ public class Account extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            accountSetup();
         }
         if (id == R.id.action_search) {
             return true;
@@ -104,6 +104,11 @@ public class Account extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void accountSetup() {
+        Intent i = new Intent(Account.this,AccountSetup.class);
+        startActivity(i);
+        //finish();
+    }
     private void addBlog() {
         Intent i = new Intent(Account.this,AddBlog.class);
         startActivity(i);

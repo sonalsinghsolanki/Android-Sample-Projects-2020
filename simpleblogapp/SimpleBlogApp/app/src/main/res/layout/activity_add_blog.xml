@@ -6,12 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".AddBlog"
     >
-    <androidx.appcompat.widget.Toolbar
-        android:background="@color/colorPrimary"
-        android:id="@+id/toolbar_add_blog"
-        app:titleTextColor="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include layout="@layout/toolbars"
+        android:id="@+id/toolbar_add_blog"/>
+
 
 
     <ImageButton
@@ -71,6 +68,7 @@
         android:visibility="invisible"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:indeterminate="true"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
 
     <Button

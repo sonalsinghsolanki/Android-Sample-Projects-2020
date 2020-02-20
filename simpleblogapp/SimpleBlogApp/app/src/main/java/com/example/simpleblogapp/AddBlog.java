@@ -177,7 +177,8 @@ public class AddBlog extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+            accountSetup();
         }
         if (id == R.id.action_search) {
             return true;
@@ -188,6 +189,12 @@ public class AddBlog extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void accountSetup() {
+        Intent i = new Intent(AddBlog.this,AccountSetup.class);
+        startActivity(i);
+        //finish();
     }
 
     private void logout() {

@@ -7,12 +7,9 @@
 
     tools:context=".Register"
     android:background="@color/colorPrimaryLight">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="@color/white"/>
+
+    <include layout="@layout/toolbars"
+        android:id="@+id/toolbar_register"/>
 
     <LinearLayout
         android:paddingLeft="20dp"
@@ -155,15 +152,17 @@
             android:inputType="phone" />
 
     </LinearLayout>
+
     <ProgressBar
+        android:id="@+id/progress_horizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ln_layout_phone_no"
+        android:indeterminate="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:layout_below="@id/ln_layout_phone_no"
-        android:id="@+id/progress_horizontal"
-        android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+        android:visibility="invisible" />
 
     <Button
         android:paddingLeft="20dp"

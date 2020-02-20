@@ -114,7 +114,7 @@ public class Register extends AppCompatActivity {
 
                             mProgressBar.setVisibility(View.INVISIBLE);
                             finishAffinity();
-                            Intent i = new Intent(Register.this, Account.class);
+                            Intent i = new Intent(Register.this, AccountSetup.class);
 
                             startActivity(i);
 
