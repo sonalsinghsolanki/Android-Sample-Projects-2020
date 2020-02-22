@@ -83,7 +83,7 @@ public class AccountSetup extends AppCompatActivity {
         mBtSaveProfile = findViewById(R.id.bt_save_profile);
 
         //Retreive user account details
-        //mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
         mBtSaveProfile.setEnabled(false);
 
         mFirestoreRef.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -91,6 +91,7 @@ public class AccountSetup extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     if(task.getResult().exists()){
+                       // mProgressBar.setVisibility(View.VISIBLE);
                         String userName = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
 
@@ -112,7 +113,7 @@ public class AccountSetup extends AppCompatActivity {
                     String error = task.getException().toString();
                     Toast.makeText(AccountSetup.this,"Firestore error: "+error,Toast.LENGTH_LONG).show();
                 }
-                //mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBar.setVisibility(View.INVISIBLE);
                 mBtSaveProfile.setEnabled(true);
             }
         });
@@ -121,12 +122,11 @@ public class AccountSetup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String userName = mEdtProfileName.getText().toString();
+                if(!TextUtils.isEmpty(userName) && mResultUri !=null){
+                    mProgressBar.setVisibility(View.VISIBLE);
+
                 if(isChanged){
 
-
-                if(!TextUtils.isEmpty(userName) && mResultUri !=null){
-                    //user_id = mAuth.getCurrentUser().getUid();
-                    mProgressBar.setVisibility(View.VISIBLE);
                     StorageReference imageRef= mStorageRef.child("profileImage").child(user_id+".jpg");
                     imageRef.putFile(mResultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -142,16 +142,19 @@ public class AccountSetup extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(AccountSetup.this,"Image Upload Error: "+e.toString(),Toast.LENGTH_LONG).show();
                             mProgressBar.setVisibility(View.INVISIBLE);
+
                         }
                     });
 
                 }else{
-                    Toast.makeText(AccountSetup.this,"Profile Name or Image is empty!!",Toast.LENGTH_SHORT).show();
+
+                    storeFirestoreData(null,userName);
+
                 }
 
+
             }else{
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    storeFirestoreData(null,userName);
+                    Toast.makeText(AccountSetup.this,"Profile Name or Image is empty!!",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -207,12 +210,15 @@ public class AccountSetup extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(AccountSetup.this,"Account Updated!!",Toast.LENGTH_SHORT).show();
 
-                            finishAffinity();
+                           // finishAffinity();
                             startActivity(new Intent(AccountSetup.this,Account.class));
+                            finish();
                         }else{
                             String error = task.getException().toString();
                             Toast.makeText(AccountSetup.this,"Firestore error: "+error,Toast.LENGTH_LONG).show();
                         }
+                        mProgressBar.setVisibility(View.INVISIBLE);
+
 
                     }
 
@@ -234,19 +240,21 @@ public class AccountSetup extends AppCompatActivity {
                     if(task.isSuccessful()){
                         Toast.makeText(AccountSetup.this,"Account Updated!!",Toast.LENGTH_LONG).show();
 
-                        finishAffinity();
+                      //  finishAffinity();
                         startActivity(new Intent(AccountSetup.this,Account.class));
+                        finish();
                     }else{
                         String error = task.getException().toString();
                         Toast.makeText(AccountSetup.this,"Firestore error: "+error,Toast.LENGTH_LONG).show();
                     }
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
                 }
 
             });
 
         }
-        mProgressBar.setVisibility(View.INVISIBLE);
+
     }
 
     private void imagePicker() {

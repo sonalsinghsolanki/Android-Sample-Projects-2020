@@ -8,9 +8,17 @@
     >
     <include layout="@layout/toolbars"
         android:id="@+id/toolbar_add_blog"/>
+        <ImageView
+            android:src="@drawable/ic_img_blog"
+            android:id="@+id/img_blog_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/toolbar_add_blog"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="10dp"
+           />
 
-
-
+    <!--Instead of using Image button ,we will use image view now..
     <ImageButton
         android:layout_below="@+id/toolbar_add_blog"
         android:id="@+id/img_blog_image"
@@ -24,7 +32,7 @@
         android:layout_marginRight="10dp"
         app:srcCompat="@color/common_google_signin_btn_text_dark_default"
         tools:srcCompat="@drawable/ic_add_white_24dp" />
-
+    -->
     <EditText
         android:id="@+id/edt_title"
         android:layout_width="match_parent"
@@ -36,52 +44,71 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/input_outline"
         android:ems="10"
-        android:hint="Post Title"
+        android:hint="@string/edt_add_title"
         android:inputType="textPersonName"
-        android:padding="10dp"
+        android:maxLength="100"
+        android:padding="16dp"
         android:singleLine="true" />
+
     <EditText
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
+
         android:id="@+id/edt_description"
-        android:background="@drawable/input_outline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edt_title"
-        android:hint="Post Description.."
-        android:padding="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/input_outline"
         android:ems="10"
+        android:gravity="top"
+        android:hint="@string/edt_add_description"
         android:inputType="textMultiLine"
         android:lines="4"
-        android:minLines="4"
+        android:maxLength="125"
         android:maxLines="4"
-        android:gravity="top"/>
+        android:minLines="4"
+        android:padding="16dp" />
 
     <ProgressBar
-        android:layout_below="@id/edt_description"
         android:id="@+id/progress_horizontal_add_blog"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_below="@id/edt_description"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
         android:indeterminate="true"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-
+        android:padding="16dp"
+        android:visibility="invisible" />
     <Button
         android:id="@+id/bt_post"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/progress_horizontal_add_blog"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:text="@string/bt_post_blog"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="16dp"
+        />
+
+    <!--<Button
+        android:id="@+id/bt_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/progress_horizontal_add_blog"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:background="@color/colorPrimary"
-        android:text="Submit Post"
-        android:textColor="@color/white" />
+        android:padding="16dp"
+        android:text="@string/bt_post_blog"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />-->
 
 
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -32,7 +33,8 @@ import com.squareup.picasso.Picasso;
 
 public class AddBlog extends AppCompatActivity {
 
-    private ImageButton imgBlogImage;
+   // private ImageButton imgBlogImage;
+   private ImageView imgBlogImage;
     private EditText edtPostTitle,edtPostDescription;
     private Button btSubmitPost;
     private static final int GALLERY_REQUEST = 2;

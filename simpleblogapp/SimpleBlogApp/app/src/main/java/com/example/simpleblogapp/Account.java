@@ -20,11 +20,15 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 public class Account extends AppCompatActivity {
@@ -34,7 +38,8 @@ public class Account extends AppCompatActivity {
     private FirebaseRecyclerAdapter adapter;
     private DatabaseReference mDatabaseRef;
     private Toolbar toolbarBlogLists;
-
+    private String currentUser;
+    private FirebaseFirestore mFirestoreRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,8 @@ public class Account extends AppCompatActivity {
         toolbarBlogLists = findViewById(R.id.toolbar_blog_lists);
         setSupportActionBar(toolbarBlogLists);
         getSupportActionBar().setTitle("Blog Lists");
+
+        mFirestoreRef = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance()
@@ -135,6 +142,24 @@ public class Account extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
         adapter.startListening();
 
+       currentUser = mAuth.getCurrentUser().getUid();
+       if(currentUser != null) {
+           mFirestoreRef.collection("Users").document(currentUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+               @Override
+               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    if(!task.getResult().exists()){
+                        Intent setUpIntent = new Intent(Account.this,AccountSetup.class);
+                        startActivity(setUpIntent);
+                        finish();
+                    }/*else{
+                        String error = String.valueOf(task.getException());
+                        Toast.makeText(Account.this,"Firestore error: "+error,Toast.LENGTH_LONG).show();
+                    }*/
+                }
+               }
+           });
+       }
     }
     @Override
     protected void onStop() {

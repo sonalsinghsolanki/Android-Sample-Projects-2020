@@ -19,4 +19,7 @@
     <string name="txt_profile_name">Full Name</string>
     <string name="bt_save_profile">Save</string>
     <string name="hint_profile_name">Your Name ..</string>
+    <string name="edt_add_description">Add Description..</string>
+    <string name="edt_add_title">Add Title..</string>
+    <string name="bt_post_blog">Post Blog</string>
 </resources>
