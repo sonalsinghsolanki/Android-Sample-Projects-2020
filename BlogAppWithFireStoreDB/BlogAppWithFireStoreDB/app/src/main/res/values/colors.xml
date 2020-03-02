@@ -9,4 +9,6 @@
     <color name="grey">#c2c2c2</color>
     <color name="black">#000000</color>
     <color name="defaultTextColor">#ffffff</color>
+    <color name="likeColorGray">#747474</color>
+
 </resources>

@@ -3,36 +3,33 @@ package com.example.BlogAppWithFireStoreDB.Model;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class Blog {
-    private String title;
-
-
-
-    private String imageuri;
+public class Blog extends BlogPostId {
+    public String title;
+    public String imageuri;
     //private String image_user;
-    private String description;
-    private String userid;
-   private Date timesstamp;
+    public String description;
+    public String userid;
+    public Date timesstamp;
 
     public  Blog(){
 
     }
 
-    public Blog(String userid,String imageuri,String title, String description,Date timesstamp) {
+    public Blog(String userid,String image,String title, String description,Date timesstamp) {
 
         //this.image_user = image_user;
         this.userid = userid;
         this.timesstamp = timesstamp;
-        this.imageuri = imageuri;
+        this.imageuri = image;
         this.title = title;
         this.description = description;
 
     }
-    public String getImageUri() {
+    public String getImageuri() {
         return imageuri;
     }
 
-    public void setImageUri(String imageuri) {
+    public void setImageuri(String imageuri) {
         this.imageuri= imageuri;
     }
 

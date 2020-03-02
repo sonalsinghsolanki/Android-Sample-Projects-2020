@@ -148,7 +148,7 @@ public class Account extends AppCompatActivity {
 
     private void logout() {
         mAuth.signOut();
-        finishAffinity();
+        finish();
         Intent i = new Intent(Account.this,Login.class);
         //If set, this activity will become the start of a new task on this history stack.
        // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

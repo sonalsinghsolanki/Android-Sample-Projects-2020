@@ -1,6 +1,7 @@
 package com.example.BlogAppWithFireStoreDB.Adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +19,22 @@ import com.example.BlogAppWithFireStoreDB.Model.Blog;
 import com.example.BlogAppWithFireStoreDB.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,6 +43,7 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
     private List<Blog>blogLists;
     private Context context;
     private FirebaseFirestore mFirestoreRef;
+    private FirebaseAuth mAuth;
 
 
     public BlogRecylerAdapter(List<Blog>blog_lists){
@@ -50,14 +57,21 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
                 .inflate(R.layout.blog_list, parent, false);
         context = parent.getContext();
         mFirestoreRef  = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        //for some performance issue we used this code..
+        holder.setIsRecyclable(false);
+
         String blog_desp = blogLists.get(position).getDescription();
         String blog_title = blogLists.get(position).getTitle();
         String blog_user_id = blogLists.get(position).getUserid();
+        String blog_id = blogLists.get(position).blogPostId ;
+        String current_user_id = mAuth.getCurrentUser().getUid();
 
         mFirestoreRef.collection("Users").document(blog_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -76,7 +90,9 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         long milliseconds = blogLists.get(position).getTimesstamp().getTime();
 
         String blog_date = new SimpleDateFormat("MM/dd/YY").format(milliseconds);
-            String blog_img =  blogLists.get(position).getImageUri();
+            String blog_img =  blogLists.get(position).getImageuri();
+
+
       //  String blog_img_user =  blogLists.get(position).getImage_user();
         //holder.setUserImage(blog_img_user);
        // holder.setUserNa(blog_user_id);
@@ -84,6 +100,62 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         holder.setBlogImage(blog_img);
         holder.setTitle(blog_title);
         holder.setDescp(blog_desp);
+
+        //get likes count
+        mFirestoreRef.collection("BlogPosts/" + blog_id + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(!documentSnapshot.isEmpty()){
+                    int count = documentSnapshot.size();
+                    holder.setLikesCount(count);
+                }else{
+                    holder.setLikesCount(0);
+                }
+            }
+        });
+
+
+    //change likes icon...
+        mFirestoreRef.collection("BlogPosts/" + blog_id + "/Likes").document(current_user_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.post_like_img.setImageDrawable(context.getDrawable(R.drawable.action_like_ascent));
+                    }
+                }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        holder.post_like_img.setImageDrawable(context.getDrawable(R.drawable.action_like_gray));
+                    }
+
+                }
+            }
+        });
+
+
+                holder.post_like_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFirestoreRef.collection("BlogPosts/" + blog_id + "/Likes").document(current_user_id).get().
+                        addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                            //if likes doesnt exists with current user then add else delete existing likes..
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(!task.getResult().exists()){
+                            Map<String , Object> likesMap = new HashMap<>();
+                            likesMap.put("timesstamp", FieldValue.serverTimestamp());
+
+                            mFirestoreRef.collection("BlogPosts/" + blog_id + "/Likes").document(current_user_id).set(likesMap);
+                        }else{
+                            mFirestoreRef.collection("BlogPosts/" + blog_id + "/Likes").document(current_user_id).delete();
+
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
@@ -93,14 +165,29 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         View mView;
+        ImageView post_like_img ;
+        TextView post_like_counts;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView =itemView ;
+            post_like_img= mView.findViewById(R.id.blog_like_btn);
+
+            post_like_counts = mView.findViewById(R.id.txt_blog_like_count);
+
         }
        /* public void setUserId(String username){
             TextView post_username = mView.findViewById(R.id.txt_username);
             post_username.setText(username);
         }*/
+       public void setBlogLikeImage(String likeImage){
+           ImageView post_like_img = mView.findViewById(R.id.blog_like_btn);
+          // post_like_img.setImageURI(likeImage);
+       }
+        public void setBlogLikeCounts(String counts){
+            TextView post_like_counts = mView.findViewById(R.id.txt_blog_like_count);
+            post_like_counts.setText(counts);
+        }
         public void setBlogPostDate(String date){
             TextView post_date = mView.findViewById(R.id.txt_blog_date);
             post_date.setText(date);
@@ -108,6 +195,9 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         public void setTitle(String title){
             TextView post_title = mView.findViewById(R.id.txt_blog_title);
             post_title.setText(title);
+        }
+        public void setLikesCount(int count){
+            post_like_counts.setText(count+ " Likes");
         }
 
         public void setDescp(String descp){
