@@ -1,6 +1,7 @@
 package com.example.BlogAppWithFireStoreDB.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.BlogAppWithFireStoreDB.CommentsActivity;
 import com.example.BlogAppWithFireStoreDB.Model.Blog;
+import com.example.BlogAppWithFireStoreDB.Model.BlogUsers;
 import com.example.BlogAppWithFireStoreDB.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,14 +44,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.ViewHolder> {
 
     private List<Blog>blogLists;
+    private List<BlogUsers>userLists;
     private Context context;
     private FirebaseFirestore mFirestoreRef;
     private FirebaseAuth mAuth;
 
 
-    public BlogRecylerAdapter(List<Blog>blog_lists){
+    public BlogRecylerAdapter(List<Blog> blog_lists, List<BlogUsers> users_lists){
 
         this.blogLists = blog_lists;
+        this.userLists = users_lists;
     }
     @NonNull
     @Override
@@ -72,7 +77,11 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         String blog_user_id = blogLists.get(position).getUserid();
         String blog_id = blogLists.get(position).blogPostId ;
         String current_user_id = mAuth.getCurrentUser().getUid();
+        String blog_user_name = userLists.get(position).getName();
+        String  blog_user_img= userLists.get(position).getImage();
+        holder.setUserDate(blog_user_img,blog_user_name);
 
+       /* //user data will be retreived..
         mFirestoreRef.collection("Users").document(blog_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -85,18 +94,23 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
                     Toast.makeText(context,"Firestore error: "+error, Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
 
-        long milliseconds = blogLists.get(position).getTimesstamp().getTime();
+       try {
+           long milliseconds = blogLists.get(position).getTimesstamp().getTime();
 
-        String blog_date = new SimpleDateFormat("MM/dd/YY").format(milliseconds);
+           String blog_date = new SimpleDateFormat("MM/dd/YY").format(milliseconds);
+           holder.setBlogPostDate(blog_date);
+       }catch (Exception e){
+           Toast.makeText(context,"Firestore error: "+e.toString(), Toast.LENGTH_SHORT).show();
+       }
             String blog_img =  blogLists.get(position).getImageuri();
 
 
       //  String blog_img_user =  blogLists.get(position).getImage_user();
         //holder.setUserImage(blog_img_user);
        // holder.setUserNa(blog_user_id);
-        holder.setBlogPostDate(blog_date);
+
         holder.setBlogImage(blog_img);
         holder.setTitle(blog_title);
         holder.setDescp(blog_desp);
@@ -156,6 +170,17 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
 
             }
         });
+
+        holder.post_img_blog_comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent commentIntent = new Intent(context, CommentsActivity.class);
+                commentIntent.putExtra("blog_post_id", blog_id);
+                context.startActivity(commentIntent);
+
+            }
+        });
     }
 
     @Override
@@ -165,7 +190,7 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         View mView;
-        ImageView post_like_img ;
+        ImageView post_like_img ,post_img_blog_comments;
         TextView post_like_counts;
 
         public ViewHolder(@NonNull View itemView) {
@@ -174,12 +199,13 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
             post_like_img= mView.findViewById(R.id.blog_like_btn);
 
             post_like_counts = mView.findViewById(R.id.txt_blog_like_count);
+            post_img_blog_comments = mView.findViewById(R.id.blog_comment_icon);
 
         }
        /* public void setUserId(String username){
             TextView post_username = mView.findViewById(R.id.txt_username);
             post_username.setText(username);
-        }*/
+        }
        public void setBlogLikeImage(String likeImage){
            ImageView post_like_img = mView.findViewById(R.id.blog_like_btn);
           // post_like_img.setImageURI(likeImage);
@@ -187,7 +213,7 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         public void setBlogLikeCounts(String counts){
             TextView post_like_counts = mView.findViewById(R.id.txt_blog_like_count);
             post_like_counts.setText(counts);
-        }
+        }*/
         public void setBlogPostDate(String date){
             TextView post_date = mView.findViewById(R.id.txt_blog_date);
             post_date.setText(date);
