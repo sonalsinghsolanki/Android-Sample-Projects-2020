@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CommentsActivity"></activity>
         <activity android:name="com.example.BlogAppWithFireStoreDB.AccountSetup"></activity>
         <!--
         if we want to fix screen orientation of the app just add that tag

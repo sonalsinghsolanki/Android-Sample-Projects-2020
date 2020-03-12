@@ -1,6 +1,7 @@
 package com.example.BlogAppWithFireStoreDB.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.BlogAppWithFireStoreDB.CommentsActivity;
 import com.example.BlogAppWithFireStoreDB.Model.Blog;
 import com.example.BlogAppWithFireStoreDB.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -156,6 +158,14 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
 
             }
         });
+                holder.img_comments.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent commentIntent = new Intent(context, CommentsActivity.class);
+                        commentIntent.putExtra("blog_post_id", blog_id);
+                        context.startActivity(commentIntent);
+                    }
+                });
     }
 
     @Override
@@ -167,6 +177,7 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
         View mView;
         ImageView post_like_img ;
         TextView post_like_counts;
+        ImageView img_post_comments,img_comments;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -174,6 +185,8 @@ public class BlogRecylerAdapter extends RecyclerView.Adapter<BlogRecylerAdapter.
             post_like_img= mView.findViewById(R.id.blog_like_btn);
 
             post_like_counts = mView.findViewById(R.id.txt_blog_like_count);
+            img_comments = mView.findViewById(R.id.blog_comment_icon);
+            img_post_comments = mView.findViewById(R.id.comment_post_btn);
 
         }
        /* public void setUserId(String username){
