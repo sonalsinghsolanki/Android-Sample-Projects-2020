@@ -17,7 +17,10 @@ import android.widget.Toast;
 
 import com.example.BlogAppWithFireStoreDB.Adapter.BlogRecylerAdapter;
 import com.example.BlogAppWithFireStoreDB.Model.Blog;
+import com.example.BlogAppWithFireStoreDB.Model.BlogUsers;
 import com.example.BlogAppWithFireStoreDB.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
     private DocumentSnapshot lastVisible;
     private Boolean isFirstPageFirstLoad = true;
     private FirebaseAuth mAuth;
+    private List<BlogUsers> users_lists;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -58,9 +62,11 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         blog_list = new ArrayList<>();
+        users_lists = new ArrayList<>();
+
         mFirestoreRef = FirebaseFirestore.getInstance();
 
-        blogRecylerAdapter = new BlogRecylerAdapter(blog_list);
+        blogRecylerAdapter = new BlogRecylerAdapter(blog_list,users_lists);
         recyclerViewBlogList.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewBlogList.setAdapter(blogRecylerAdapter);
         recyclerViewBlogList.setHasFixedSize(true);
@@ -97,22 +103,42 @@ public class HomeFragment extends Fragment {
                     {
                         lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size()-1);
                         blog_list.clear();
+                        users_lists.clear();
                     }
                 for (DocumentChange documentChange:queryDocumentSnapshots.getDocumentChanges()){
                     //This will tell us document change if data is added..
                     if(documentChange.getType() == DocumentChange.Type.ADDED){
                         String blogPostId = documentChange.getDocument().getId();
 
+
                         //get blog id and pass thats is using extended class blogPostId..
                         Blog blog = documentChange.getDocument().toObject(Blog.class).withId(blogPostId);
-                        if(isFirstPageFirstLoad)
-                        {
-                        blog_list.add(blog);
-                        }
-                        else{
-                            blog_list.add(0,blog);
-                        }
-                        blogRecylerAdapter.notifyDataSetChanged();
+
+                        String blogUserId =documentChange.getDocument().getString("userid");
+                        mFirestoreRef.collection("Users").document(blogUserId).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    BlogUsers users = task.getResult().toObject(BlogUsers.class);
+
+                                    if(isFirstPageFirstLoad)
+                                    {
+                                        users_lists.add(users);
+                                        blog_list.add(blog);
+                                    }
+                                    else{
+                                        users_lists.add(0,users);
+                                        blog_list.add(0,blog);
+                                    }
+                                    blogRecylerAdapter.notifyDataSetChanged();
+                                }else{
+                                    Toast.makeText(getContext(),"Error retreiving user data: "+
+                                            task.getException().toString(),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
                     }
                 }
                 isFirstPageFirstLoad = false;
@@ -144,14 +170,41 @@ public class HomeFragment extends Fragment {
                         lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                         for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
+
                             //This will tell us document change if data is added..
                             if (documentChange.getType() == DocumentChange.Type.ADDED) {
                                 String blogPostId = documentChange.getDocument().getId();
 
                                 //get blog id and pass thats is using extended class blogPostId..
                                 Blog blog = documentChange.getDocument().toObject(Blog.class).withId(blogPostId);
-                                blog_list.add(blog);
-                                blogRecylerAdapter.notifyDataSetChanged();
+
+                               /* blog_list.add(blog);
+                                blogRecylerAdapter.notifyDataSetChanged();*/
+
+                                String blogUserId =documentChange.getDocument().getString("userid");
+                                mFirestoreRef.collection("Users").document(blogUserId).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    BlogUsers users = task.getResult().toObject(BlogUsers.class);
+
+                                                    /*if(isFirstPageFirstLoad)
+                                                    {*/
+                                                        users_lists.add(users);
+                                                        blog_list.add(blog);
+                                                   /*  }
+                                                   else{
+                                                        users_lists.add(0,users);
+                                                        blog_list.add(0,blog);
+                                                    }*/
+                                                    blogRecylerAdapter.notifyDataSetChanged();
+                                                }else{
+                                                    Toast.makeText(getContext(),"Error retreiving user data: "+
+                                                            task.getException().toString(),Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                             }
                         }
                     }
